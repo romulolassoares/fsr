@@ -13,6 +13,7 @@ module.exports = {
     const templateBase = path.join(process.cwd(), '/template/base');
     const templateNetworkConfig = path.join(process.cwd(), '/template/networkconfig');
     const templateCrypto = path.join(process.cwd(), '/template/crypto');
+    const templateConfigTx = path.join(process.cwd(), '/template/configtx');
     
     //Leitura do arquivo
     const readFile = (file) => {
@@ -75,48 +76,84 @@ module.exports = {
     const replaceFile = (contents, stringReplace, value) => {
       return new Promise( (resolve, reject) => {
         switch(stringReplace) {
-          case 'couchdbname':
-            var newValue = String(contents).replace(/couchdbname/g, ' ' + value);
+          case 'Channelname':
+            var newValue = String(contents).replace(/Channelname/g, value);
             resolve(newValue);
             break;
-          case 'couchdbuser':
-            var newValue = String(contents).replace(/COUCHDB_USER=/g, 'COUCHDB_USER=' + value);
+          case 'couchdbname':
+            var newValue = String(contents).replace(/couchdbname/g, 'couchdb' + value);
             resolve(newValue);
             break;
           case 'couchdbpassword':
             var newValue = String(contents).replace(/COUCHDB_PASSWORD=/g, 'COUCHDB_PASSWORD=' + value);
             resolve(newValue);
             break;
-          case 'portcouch':
-            var newValue = String(contents).replace(/portcouch/g, value);
+          case 'couchdbpassword':
+            var newValue = String(contents).replace(/COUCHDB_PASSWORD=/g, 'COUCHDB_PASSWORD=' + value);
             resolve(newValue);
             break;
-          case 'networkname':
-            var newValue = String(contents).replace(/networkname/g, value);
+          case 'couchdbuser':
+            var newValue = String(contents).replace(/COUCHDB_USER=/g, 'COUCHDB_USER=' + value);
             resolve(newValue);
             break;
-          case 'orgname':
-            var newValue = String(contents).replace(/orgname/g, value);
+          case 'countpeer': //ok
+            var newValue = String(contents).replace(/countpeer/g, value);
+            resolve(newValue);
+            break;
+          case 'description':
+            var newValue = String(contents).replace(/description/g, value);
             resolve(newValue);
             break;
           case 'keyorg':
             var newValue = String(contents).replace(/keyorg/g, value);
             resolve(newValue);
             break;
+          case 'networkname':
+            var newValue = String(contents).replace(/networkname/g, value);
+            resolve(newValue);
+            break;     
+          case 'ordererca':
+            var newValue = String(contents).replace(/ordererca/g, value);
+            resolve(newValue);
+            break;      
+          case 'ordererpeer':
+            var newValue = String(contents).replace(/ordererpeer/g, value);
+            resolve(newValue);
+            break;
+          case 'OrganizationOrgs':
+            var newValue = String(contents).replace(/OrganizationOrgs/g, value);
+            resolve(newValue);
+            break;
+          case 'orgname'://ok
+            var newValue = String(contents).replace(/orgname/g, value);
+            resolve(newValue);
+            break;
+          case 'peernumber':
+            var newValue = String(contents).replace(/peernumber/g, 'peer' + value);
+            resolve(newValue);
+            break;
+          case 'peersOrgs':
+            var newValue = String(contents).replace(/peersOrgs/g, value);
+            resolve(newValue);
+            break;
           case 'portca':
             var newValue = String(contents).replace(/portca/g, value);
+            resolve(newValue);
+            break;
+          case 'portcouch':
+            var newValue = String(contents).replace(/portcouch/g, value);
+            resolve(newValue);
+            break;
+          case 'portnumber':
+            var newValue = String(contents).replace(/portnumber/g, value);
             resolve(newValue);
             break;
           case 'portorderer':
             var newValue = String(contents).replace(/portorderer/g, value);
             resolve(newValue);
             break;
-          case 'ordererpeer':
-            var newValue = String(contents).replace(/ordererpeer/g, value);
-            resolve(newValue);
-            break;
-          case 'peernumber':
-            var newValue = String(contents).replace(/peernumber/g, value);
+          case 'orderer':
+            var newValue = String(contents).replace(/orderer/g, value);
             resolve(newValue);
             break;
           case 'portpeer':
@@ -126,25 +163,9 @@ module.exports = {
           case 'portpeer2':
             var newValue = String(contents).replace(/portpeer2/g, value);
             resolve(newValue);
-            break;
-          case 'orderer':
-            var newValue = String(contents).replace(/orderer/g, value);
-            resolve(newValue);
-            break;
-          case 'description':
-            var newValue = String(contents).replace(/description/g, value);
-            resolve(newValue);
-            break;
+            break;     
           case 'wallet-name':
             var newValue = String(contents).replace(/wallet-name/g, value);
-            resolve(newValue);
-            break;
-          case 'peersOrgs':
-            var newValue = String(contents).replace(/peersOrgs/g, value);
-            resolve(newValue);
-            break;
-          case 'countpeer':
-            var newValue = String(contents).replace(/countpeer/g, value);
             resolve(newValue);
             break;
           default:
@@ -177,49 +198,58 @@ module.exports = {
     
     }
     //seleciona e copia os arquivos usando a função creatDir() e createNewFile
-    async function copiaArquivos(path){
-      console.log(path)
-      await createNewFile('base.yaml', path, templateBase);
-      await createNewFile('docker-compose-ca.yaml', path, templateBase);
-      await createNewFile('docker-compose-cli.yaml', path, templateBase);
-      await createNewFile('docker-compose-couchdb.yaml', path, templateBase);
-      await createNewFile('docker-compose-orderer.yaml', path, templateBase);
-      await createNewFile('docker-compose-peer.yaml', path, templateBase);
-      await createNewFile('docker-compose.yaml', path, templateBase);
-
-      await createNewFile('ca.yaml', path, templateNetworkConfig);
-      await createNewFile('certificateAuthorities.yaml', path, templateNetworkConfig);
-      await createNewFile('chaincode.yaml', path, templateNetworkConfig);
-      await createNewFile('identityPrivateSig.yaml', path, templateNetworkConfig);
-      await createNewFile('orderers.yaml', path, templateNetworkConfig);
-      await createNewFile('org.yaml', path, templateNetworkConfig);
-      await createNewFile('organizationsCA.yaml', path, templateNetworkConfig);
-      await createNewFile('organizationsOrgMSP.yaml', path, templateNetworkConfig);
-      await createNewFile('peer.yaml', path, templateNetworkConfig);
-      await createNewFile('peerchannel.yaml', path, templateNetworkConfig);
-
-      await createNewFile('cryptogen.yaml', pathNetwork, templateCrypto);
-      await createNewFile('peer-cryptogen.yaml', pathNetwork, templateCrypto);
+    async function copiaArquivos(){
+      console.log(pathNetwork)
+      const  newBase = path.join(pathNetwork.trim(), 'base');
+      await createNewFile('base.yaml', newBase, templateBase);
+      await createNewFile('docker-compose-ca.yaml', newBase, templateBase);
+      await createNewFile('docker-compose-cli.yaml', newBase, templateBase);
+      await createNewFile('docker-compose-couchdb.yaml', newBase, templateBase);
+      await createNewFile('docker-compose-orderer.yaml', newBase, templateBase);
+      await createNewFile('docker-compose-peer.yaml', newBase, templateBase);
+      await createNewFile('docker-compose.yaml', newBase, templateBase);
+      const  newNetworkConfig = path.join(pathNetwork.trim(), 'networkconfig');
+      await createNewFile('ca.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('certificateAuthorities.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('chaincode.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('identityPrivateSig.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('orderers.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('org.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('organizationsCA.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('organizationsOrgMSP.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('peer.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('peerchannel.yaml', newNetworkConfig, templateNetworkConfig);
+      const  newCrypto = path.join(pathNetwork.trim(), 'crypto');
+      await createNewFile('cryptogen.yaml', newCrypto, templateCrypto);
+      await createNewFile('peer-cryptogen.yaml', newCrypto, templateCrypto);
+      const newConfigTX = path.join(pathNetwork.trim(), 'configtx');
+      await createNewFile('aplication-configtx-base.yaml', newConfigTX, templateConfigTx);
+      await createNewFile('channel-configtx-base.yaml', newConfigTX, templateConfigTx);
+      await createNewFile('configtx.yaml', newConfigTX, templateConfigTx);
+      await createNewFile('orderegenesis-configtx-base.yaml', newConfigTX, templateConfigTx);
+      await createNewFile('orderer-configtx-base.yaml', newConfigTX, templateConfigTx);
+      await createNewFile('ordererpeer-configtx-base.yaml', newConfigTX, templateConfigTx);
+      await createNewFile('peer-configtx-base.yaml', newConfigTX, templateConfigTx);
 
     }
     //++++++++++++++++++++++++Start++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //Altera o escrito dos arquivos
     // da pasta base --------------------------------------------
-    async function changeBase(networkName){
-      const base = path.join(pathNetwork, '/base.yaml');
+    async function changeBase(folder, networkName){
+      const base = path.join(pathNetwork, folder,'/base.yaml');
 
       await changeWrite(base, 'networkname', networkName);    
     }
     
-    async function changeDocker(networkName){
-      const dockerCompose = path.join(pathNetwork, '/docker-compose.yaml');
+    async function changeDocker(folder, networkName){
+      const dockerCompose = path.join(pathNetwork, folder, '/docker-compose.yaml');
     
       await changeWrite(dockerCompose, 'networkname', networkName);
     
     }
     
-    async function changeDockerComposeCA(orgName, keyOrg, portCA, networkName){
-      const dockerComposeCA = path.join(pathNetwork, '/docker-compose-ca.yaml');
+    async function changeDockerComposeCA(folder, orgName, keyOrg, portCA, networkName){
+      const dockerComposeCA = path.join(pathNetwork, folder, '/docker-compose-ca.yaml');
     
       await changeWrite(dockerComposeCA, 'orgname', orgName);
       await changeWrite(dockerComposeCA, 'keyorg', keyOrg);
@@ -228,14 +258,14 @@ module.exports = {
     
     }
     
-    async function changeDockerComposeCLI(networkName){
-      const dockerComposeCLI = path.join(pathNetwork, '/docker-compose-cli.yaml');
+    async function changeDockerComposeCLI(folder, networkName){
+      const dockerComposeCLI = path.join(pathNetwork, folder, '/docker-compose-cli.yaml');
     
       await changeWrite(dockerComposeCLI, 'networkname', networkName);
     };
     
-    async function changedockerComposeCouchDB(networkName, couchdbName, couchdbUser, couchdbPassword, portCouch){
-      const dockerComposeCouchDB = path.join(pathNetwork, '/docker-compose-couchdb.yaml');
+    async function changedockerComposeCouchDB(folder, networkName, couchdbName, couchdbUser, couchdbPassword, portCouch){
+      const dockerComposeCouchDB = path.join(pathNetwork, folder, '/docker-compose-couchdb.yaml');
     
       await changeWrite(dockerComposeCouchDB, 'couchdbname', couchdbName);
       await changeWrite(dockerComposeCouchDB, 'couchdbuser', couchdbUser);
@@ -244,16 +274,16 @@ module.exports = {
       await changeWrite(dockerComposeCouchDB, 'networkname', networkName);
     }
     
-    async function changeDockerComposeOrderer(networkName, portOrderer, ordererPeer){
-      const dockerComposeOrderer = path.join(pathNetwork, '/docker-compose-orderer.yaml');
+    async function changeDockerComposeOrderer(folder, networkName, portOrderer, ordererPeer){
+      const dockerComposeOrderer = path.join(pathNetwork, folder, '/docker-compose-orderer.yaml');
     
       await changeWrite(dockerComposeOrderer, 'networkname', networkName);
       await changeWrite(dockerComposeOrderer, 'portorderer', portOrderer);
       await changeWrite(dockerComposeOrderer, 'ordererpeer', ordererPeer);
     }
     
-    async function changeDockerComposePeer(orgName, peerNumber, couchdbName, portCouch, portPeer2, networkName){
-      const dockerComposePeer = path.join(pathNetwork, '/docker-compose-peer.yaml');
+    async function changeDockerComposePeer(folder, orgName, peerNumber, couchdbName, portCouch, portPeer2, networkName){
+      const dockerComposePeer = path.join(pathNetwork, folder, '/docker-compose-peer.yaml');
     
       await changeWrite(dockerComposePeer, 'orgname', orgName);
       await changeWrite(dockerComposePeer, 'peernumber', peerNumber);
@@ -264,29 +294,29 @@ module.exports = {
     }
     //--------------------------------------------------------------------------------
     // da pasta networkconfig---------------------------------------------------------
-    async function changeCA(portCA, orgName){
-      const ca = path.join(pathNetwork, '/ca.yaml');
+    async function changeCA(folder, portCA, orgName){
+      const ca = path.join(pathNetwork, folder, '/ca.yaml');
     
       await changeWrite(ca, 'portca', portCA);
       await changeWrite(ca, 'orgname', orgName);
     }
 
-    async function changeIdentityPrivateSig(orgName, keyOrg){
-      const identityPrivateSig = path.join(pathNetwork, '/identityPrivateSig.yaml');
+    async function changeIdentityPrivateSig(folder, orgName, keyOrg){
+      const identityPrivateSig = path.join(pathNetwork, folder, '/identityPrivateSig.yaml');
 
       await changeWrite(identityPrivateSig, 'orgname', orgName);
       await changeWrite(identityPrivateSig, 'keyorg', keyOrg);
     }
 
-    async function changeOrderers(portOrderer, orderer){
-      const orderers = path.join(pathNetwork, '/orderers.yaml');
+    async function changeOrderers(folder, portOrderer, orderer){
+      const orderers = path.join(pathNetwork, folder, '/orderers.yaml');
 
       await changeWrite(orderers, 'portorderer', portOrderer);
       await changeWrite(orderers, 'orderer', orderer);
     }
 
-    async function changeOrg(networkName, orgName, description, walletName){
-      const org = path.join(pathNetwork, '/org.yaml');
+    async function changeOrg(folder, networkName, orgName, description, walletName){
+      const org = path.join(pathNetwork, folder, '/org.yaml');
 
       await changeWrite(org, 'networkname', networkName);
       await changeWrite(org, 'orgname', orgName);
@@ -294,47 +324,50 @@ module.exports = {
       await changeWrite(org, 'wallet-name', walletName);
     }
 
-    async function changeOrganizationsCA(orgName, keyOrg){
-      const organizationsCA = path.join(pathNetwork, '/organizationsCA.yaml');
+    async function changeOrganizationsCA(folder, orgName, keyOrg){
+      const organizationsCA = path.join(pathNetwork, folder, '/organizationsCA.yaml');
 
       await changeWrite(organizationsCA, 'orgname', orgName);
       await changeWrite(organizationsCA, 'keyorg', keyOrg);
     }
 
-    async function changeOrganizationsOrgMSP(orgName, peersOrgs){
-      const organizationsOrgMSP = path.join(pathNetwork, '/organizationsOrgMSP.yaml');
+    async function changeOrganizationsOrgMSP(folder, orgName, peersOrgs){
+      const organizationsOrgMSP = path.join(pathNetwork, folder, '/organizationsOrgMSP.yaml');
 
       await changeWrite(organizationsOrgMSP, 'orgname', orgName);
       await changeWrite(organizationsOrgMSP, 'peersOrgs', peersOrgs);
     }
 
-    async function changePeer(portPeer, orgName, peerNumber){
-      const peer = path.join(pathNetwork, '/peer.yaml');
+    async function changePeer(folder, portPeer, orgName, peerNumber){
+      const peer = path.join(pathNetwork, folder, '/peer.yaml');
 
       await changeWrite(peer, 'portpeer', portPeer);
       await changeWrite(peer, 'orgname', orgName);
       await changeWrite(peer, 'peernumber', peerNumber);
     }
 
-    async function changePeerChannel(orgName, peerNumber){
-      const peerChannel = path.join(pathNetwork, '/peerchannel.yaml');
+    async function changePeerChannel(folder, orgName, peerNumber){
+      const peerChannel = path.join(pathNetwork, folder, '/peerchannel.yaml');
 
       await changeWrite(peerChannel, 'orgname', orgName);
       await changeWrite(peerChannel, 'peernumber', peerNumber);
     }
     //--------------------------------------------------------------------------------
     // da pasta crypto----------------------------------------------------------------
-    async function changeCryptogen(orderer){
-      const cryptogen = path.join(pathNetwork, '/cryptogen.yaml');
+    async function changeCryptogen(folder, orderer){
+      const cryptogen = path.join(pathNetwork, folder, '/cryptogen.yaml');
 
       await changeWrite(cryptogen, 'orderer', orderer);
     }
-    async function changePeerCryptogen(orgName, countPeer){
-      const peerCryptogen = path.join(pathNetwork, 'peer-cryptogen.yaml');
+    async function changePeerCryptogen(folder, orgName, countPeer){
+      const peerCryptogen = path.join(pathNetwork, folder, 'peer-cryptogen.yaml');
 
       await changeWrite(peerCryptogen, 'orgname', orgName);
       await changeWrite(peerCryptogen, 'countpeer', countPeer);
     }
+    //--------------------------------------------------------------------------------
+    // da pasta crypto----------------------------------------------------------------
+    async function changeAplicationCongitxBase(){}
     //+++++++++++++++++++++++End+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //Efetua as funções
     async function make() {
@@ -357,28 +390,31 @@ module.exports = {
       const walletName = 'wallet001'
       const peersOrgs = '5_dd'
       const countPeer = '5'
-    
-      await copiaArquivos(pathNetwork);
+
+      const folderBase = 'base';    
+      const folderNetworkConfig = 'networkconfig';
+      const folderCrypto = 'crypto';
+      await copiaArquivos();
       // Troca as informações dos arquivos da pasta base
-      await changeBase(networkName);    
-      await changeDocker(networkName);    
-      await changeDockerComposeCA(orgName, keyOrg, portCA, networkName);    
-      await changeDockerComposeCLI(networkName);
-      await changedockerComposeCouchDB(networkName, couchdbName, couchdbUser, couchdbPassword, portCouch);    
-      await changeDockerComposeOrderer(networkName, portOrderer, ordererPeer);
-      await changeDockerComposePeer(orgName, peerNumber, couchdbName, portCouch, portPeer2, networkName);
+      await changeBase(folderBase, networkName);    
+      await changeDocker(folderBase, networkName);    
+      await changeDockerComposeCA(folderBase, orgName, keyOrg, portCA, networkName);    
+      await changeDockerComposeCLI(folderBase, networkName);
+      await changedockerComposeCouchDB(folderBase, networkName, couchdbName, couchdbUser, couchdbPassword, portCouch);    
+      await changeDockerComposeOrderer(folderBase, networkName, portOrderer, ordererPeer);
+      await changeDockerComposePeer(folderBase, orgName, peerNumber, couchdbName, portCouch, portPeer2, networkName);
       // Troca as informações dos arquivos da pasta networkconfig
-      await changeCA(portCA, orgName);
-      await changeIdentityPrivateSig(orgName, keyOrg);
-      await changeOrderers(portOrderer, orderer);
-      await changeOrg(networkName, orgName, description, walletName);
-      await changeOrganizationsCA(orgName, keyOrg);
-      await changeOrganizationsOrgMSP(orgName, peersOrgs);
-      await changePeer(portPeer, orgName, peerNumber);
-      await changePeerChannel(orgName, peerNumber);
+      await changeCA(folderNetworkConfig, portCA, orgName);
+      await changeIdentityPrivateSig(folderNetworkConfig, orgName, keyOrg);
+      await changeOrderers(folderNetworkConfig, portOrderer, orderer);
+      await changeOrg(folderNetworkConfig, networkName, orgName, description, walletName);
+      await changeOrganizationsCA(folderNetworkConfig, orgName, keyOrg);
+      await changeOrganizationsOrgMSP(folderNetworkConfig, orgName, peersOrgs);
+      await changePeer(folderNetworkConfig, portPeer, orgName, peerNumber);
+      await changePeerChannel(folderNetworkConfig, orgName, peerNumber);
       // Troca as informações dos arquivos da pasta crypto
-      await changeCryptogen(orderer);
-      await changePeerCryptogen(orgName, countPeer);
+      await changeCryptogen(folderCrypto, orderer);
+      await changePeerCryptogen(folderCrypto, orgName, countPeer);
 
     }
 
@@ -389,9 +425,17 @@ module.exports = {
 
         if(fs.existsSync(networks)) {
           fs.mkdirSync(pathNetwork.trim());
+          fs.mkdirSync(path.join(pathNetwork.trim(), 'base'));
+          fs.mkdirSync(path.join(pathNetwork.trim(), 'configtx'));
+          fs.mkdirSync(path.join(pathNetwork.trim(), 'crypto'));
+          fs.mkdirSync(path.join(pathNetwork.trim(), 'networkconfig'));
         } else {
           fs.mkdirSync(networks.trim());
           fs.mkdirSync(pathNetwork.trim());
+          fs.mkdirSync(path.join(pathNetwork.trim(), 'base'));
+          fs.mkdirSync(path.join(pathNetwork.trim(), 'configtx'));
+          fs.mkdirSync(path.join(pathNetwork.trim(), 'crypto'));
+          fs.mkdirSync(path.join(pathNetwork.trim(), 'networkconfig'));
         }
 
         await make();
