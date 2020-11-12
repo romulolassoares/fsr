@@ -9,5 +9,12 @@
   "portCouch": "1.2.3.4",
   "portOrderer": "1000",
   "ordererPeer": "10",
-  "peerNumber": "02030"
+  "peerNumber": "02030",
+  "portPeer": "5.6.3.5",
+  "portPeer2": "2.3.4.5",
+  "orderer": "5.3.8.1",
+  "description": "Similique ex beatae quod maiores. Dicta magni aspernatur ipsum.",
+  "walletName": "wallet001",
+  "peersOrgs": "5_dd",
+  "countPeer": "5"
 }
