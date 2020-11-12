@@ -120,8 +120,8 @@ module.exports = {
             var newValue = String(contents).replace(/ordererpeer/g, value);
             resolve(newValue);
             break;
-          case 'OrganizationOrgs':
-            var newValue = String(contents).replace(/OrganizationOrgs/g, value);
+          case 'OrganizationsOrgs':
+            var newValue = String(contents).replace(/OrganizationsOrgs/g, value);
             resolve(newValue);
             break;
           case 'orgname'://ok
@@ -367,7 +367,34 @@ module.exports = {
     }
     //--------------------------------------------------------------------------------
     // da pasta crypto----------------------------------------------------------------
-    async function changeAplicationCongitxBase(){}
+    async function changeAplicationCongitxBase(folder, OrganizationsOrgs){
+      const aplicationConfigtxBase = path.join(pathNetwork, folder, 'aplication-configtx-base.yaml');
+
+      await changeWrite(aplicationConfigtxBase, 'OrganizationsOrgs', OrganizationsOrgs);
+    }
+    async function changeChannelConfigtxBase(folder,OrganizationsOrgs){
+      const configtx = path.join(pathNetwork, folder, 'channel-configtx-base.yaml');
+
+      await changeWrite(configtx, 'OrganizationsOrgs', OrganizationsOrgs);
+    }
+    async function changeConfigtx(folder){}
+    async function changeOrdererGenesisConfigtxBase(folder, OrganizationsOrgs){
+      const ordererGenesisConfigtxBase = path.join(pathNetwork, folder, 'orderegenesis-configtx-base.yaml');
+
+      await changeWrite(ordererGenesisConfigtxBase, 'OrganizationsOrgs', OrganizationsOrgs);
+    }
+    async function changeOrdererConfigtxBase(folder, orderer, portorderer){
+      const ordererConfigtxBase = path.join(pathNetwork, folder, 'orderer-configtx-base.yaml');
+
+      await changeWrite(ordererConfigtxBase, 'portorderer', portorderer);
+      await changeWrite(ordererConfigtxBase, 'orderer', orderer);
+    }
+    async function changeOrdererPeerConfigtxBase(folder){}
+    async function changePeerConfigtxBase(folder, orgName){
+      const peerConfigtxBase = path.join(pathNetwork, folder, 'peer-configtx-base.yaml');
+
+      await changeWrite(peerConfigtxBase, 'orgname', orgName);
+    }
     //+++++++++++++++++++++++End+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //Efetua as funções
     async function make() {
@@ -389,11 +416,13 @@ module.exports = {
       const description = 'Similique ex beatae quod maiores. Dicta magni aspernatur ipsum.';
       const walletName = 'wallet001'
       const peersOrgs = '5_dd'
-      const countPeer = '5'
+      const countPeer = '5';
+      const OrganizationsOrgs = "orgOrgUFJFDCC"
 
       const folderBase = 'base';    
       const folderNetworkConfig = 'networkconfig';
       const folderCrypto = 'crypto';
+      const folderConfigtx = 'configtx';
       await copiaArquivos();
       // Troca as informações dos arquivos da pasta base
       await changeBase(folderBase, networkName);    
@@ -415,6 +444,12 @@ module.exports = {
       // Troca as informações dos arquivos da pasta crypto
       await changeCryptogen(folderCrypto, orderer);
       await changePeerCryptogen(folderCrypto, orgName, countPeer);
+      // Troca as informações dos arquivos da pasta configtx
+      await changeAplicationCongitxBase(folderConfigtx, OrganizationsOrgs);
+      await changeChannelConfigtxBase(folderConfigtx, OrganizationsOrgs);
+      await changeOrdererGenesisConfigtxBase(folderConfigtx, OrganizationsOrgs);
+      await changeOrdererConfigtxBase(folderConfigtx, orderer, portOrderer);
+      await changePeerConfigtxBase(folderConfigtx, orgName);
 
     }
 
@@ -442,7 +477,6 @@ module.exports = {
       }
       else{
         console.log('Essa networks já existe');
-        await make();//Deletar
       }
     })
 
