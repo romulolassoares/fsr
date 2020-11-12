@@ -1,0 +1,11 @@
+ 
+  - Name: joao
+    Domain: joao.com
+    CA:
+       Hostname: ca.joao.com  
+    Template:
+      Count: 5
+    SANS:
+        - "localhost"
+    Users:
+      Count: 1

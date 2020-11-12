@@ -1,0 +1,36 @@
+    
+    
+    02030.joao.com:
+        container_name: 02030.joao.com
+        extends:
+          file:   base.yaml
+          service: peer-base
+        dns_search: .
+        environment:   
+          - GODEBUG=netdns=go      
+          - CORE_PEER_ID=02030.joao.com
+          - CORE_PEER_LOCALMSPID=joaoMSP
+          - CORE_PEER_ADDRESS=02030.joao.com:7051
+          - CORE_PEER_GOSSIP_BOOTSTRAP=02030.joao.com:7051     
+          - CORE_PEER_GOSSIP_EXTERNALENDPOINT=02030.joao.com:7051
+          - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+          
+          
+          
+          - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS= banco_de_dados:1.2.3.4
+          # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          # provide the credentials for ledger to connect to CouchDB.  The username and password must
+          # match the username and password set for the associated CouchDB.
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+        ports:
+          - portnumber:7051
+          - 2.3.4.5:7053
+        volumes:
+          - ./crypto-config/peerOrganizations/joao.com/peers/02030.joao.com/:/etc/hyperledger/crypto/peer          
+        depends_on:
+          - orderer.example.com
+          -  banco_de_dados
+        networks:
+          - ufjf_dcc

@@ -1,0 +1,13 @@
+{
+  "orgName": "joão",
+  "networkName": "xx",
+  "keyOrg": "12345joao67890",
+  "portCA": "127.0.0.1",
+  "couchdbName": "Banco_de_Dados",
+  "couchdbUser": "admin",
+  "couchdbPassword": "12345rr",
+  "portCouch": "1.2.3.4",
+  "portOrderer": "1000",
+  "ordererPeer": "10",
+  "peerNumber": "02030"
+}

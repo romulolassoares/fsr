@@ -1,0 +1,20 @@
+{
+  "name": "fsr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "fs-extra": "^9.0.1",
+    "mongoose": "^5.10.11",
+    "path": "^0.12.7",
+    "prompt": "^1.0.0",
+    "shelljs": "^0.8.4"
+  }
+}
