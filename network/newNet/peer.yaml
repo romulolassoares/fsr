@@ -1,9 +1,0 @@
-  
-  02030.joao.com:
-    # this URL is used to send endorsement and query requests
-    url: grpcs://localhost:5.6.3.5
-
-    grpcOptions:
-      ssl-target-name-override:  02030.joao.com
-    tlsCACerts:
-      path: ./crypto-config/peerOrganizations/joao.com/peers/02030.joao.com/tls/ca.crt
