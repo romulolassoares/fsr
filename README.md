@@ -1,7 +1,7 @@
-# fsr
+# FSR
 Edição dos arquivos da pasta template
 # Versions
-node: v14.15.0.
+node: v14.15.0._
 npm: 6.14.8.
 Last change: 12/11/2020.
 # To use
