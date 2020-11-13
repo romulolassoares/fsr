@@ -4,8 +4,10 @@ const path = require('path');
 const shell = require('shelljs');
 const readline = require('readline');
 
+
 module.exports = {
   async creatAndSave(nameNetwork) {
+
 
     const networks = path.join(process.cwd(), 'network');
     const pathNetwork = networks + '/' + nameNetwork;
@@ -198,7 +200,7 @@ module.exports = {
     
     }
     //seleciona e copia os arquivos usando a função creatDir() e createNewFile
-    async function copiaArquivos(){
+    async function copyFiles(){
       console.log(pathNetwork)
       const  newBase = path.join(pathNetwork.trim(), 'base');
       await createNewFile('base.yaml', newBase, templateBase);
@@ -212,7 +214,9 @@ module.exports = {
       await createNewFile('ca.yaml', newNetworkConfig, templateNetworkConfig);
       await createNewFile('certificateAuthorities.yaml', newNetworkConfig, templateNetworkConfig);
       await createNewFile('chaincode.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('channel.yaml', newNetworkConfig, templateNetworkConfig);
       await createNewFile('identityPrivateSig.yaml', newNetworkConfig, templateNetworkConfig);
+      await createNewFile('network-config.yaml', newNetworkConfig, templateNetworkConfig);
       await createNewFile('orderers.yaml', newNetworkConfig, templateNetworkConfig);
       await createNewFile('org.yaml', newNetworkConfig, templateNetworkConfig);
       await createNewFile('organizationsCA.yaml', newNetworkConfig, templateNetworkConfig);
@@ -301,11 +305,24 @@ module.exports = {
       await changeWrite(ca, 'orgname', orgName);
     }
 
+    async function changeChannel(folder, ChannelName) {
+      const channel = path.join(pathNetwork, folder, '/channel.yaml');
+
+      await changeWrite(channel, 'Channelname', ChannelName);
+    }
+
     async function changeIdentityPrivateSig(folder, orgName, keyOrg){
       const identityPrivateSig = path.join(pathNetwork, folder, '/identityPrivateSig.yaml');
 
       await changeWrite(identityPrivateSig, 'orgname', orgName);
       await changeWrite(identityPrivateSig, 'keyorg', keyOrg);
+    }
+
+    async function changeNetworkConfig(folder) {
+      const netowrkConfig = path.join(pathNetwork, folder, '/network-config.yaml');
+
+      await changeWrite(netowrkConfig, 'networkname', networkName);
+      await changeWrite(netowrkConfig, 'description', description);
     }
 
     async function changeOrderers(folder, portOrderer, orderer){
@@ -377,7 +394,6 @@ module.exports = {
 
       await changeWrite(configtx, 'OrganizationsOrgs', OrganizationsOrgs);
     }
-    async function changeConfigtx(folder){}
     async function changeOrdererGenesisConfigtxBase(folder, OrganizationsOrgs){
       const ordererGenesisConfigtxBase = path.join(pathNetwork, folder, 'orderegenesis-configtx-base.yaml');
 
@@ -389,7 +405,6 @@ module.exports = {
       await changeWrite(ordererConfigtxBase, 'portorderer', portorderer);
       await changeWrite(ordererConfigtxBase, 'orderer', orderer);
     }
-    async function changeOrdererPeerConfigtxBase(folder){}
     async function changePeerConfigtxBase(folder, orgName){
       const peerConfigtxBase = path.join(pathNetwork, folder, 'peer-configtx-base.yaml');
 
@@ -399,31 +414,32 @@ module.exports = {
     //Efetua as funções
     async function make() {
       // Define as variáveis
-      const orgName = 'joao';
-      const networkName = 'ufjf_DCC';
-      const keyOrg = '12345joao67890';
-      const portCA = '127.0.0.1';
-      const couchdbName = 'Banco_de_dados';
-      const couchdbUser = 'admin';
-      const couchdbPassword = '12345rr';
-      const portCouch = '1.2.3.4';
-      const portOrderer= '1000';
-      const ordererPeer= '10';
-      const peerNumber= '02030';
-      const portPeer= '5.6.3.5';
-      const portPeer2= '2.3.4.5';
-      const orderer = '5.3.8.1';
-      const description = 'Similique ex beatae quod maiores. Dicta magni aspernatur ipsum.';
-      const walletName = 'wallet001'
-      const peersOrgs = '5_dd'
-      const countPeer = '5';
-      const OrganizationsOrgs = "orgOrgUFJFDCC"
+      const orgName = 'nome_da_organização';
+      const networkName = 'nome_da_network';
+      const keyOrg = 'chave_da_org';
+      const portCA = 'porta_Ca';
+      const couchdbName = 'Nome_do_couchdb';
+      const couchdbUser = 'usuário_do_couchdb';
+      const couchdbPassword = 'senha_do_couchdb';
+      const portCouch = 'porta_Couch';
+      const portOrderer= 'porta_ordem';
+      const ordererPeer= 'peer_ordem';
+      const peerNumber= 'numero_peer';
+      const portPeer= 'porta_peer';
+      const portPeer2= 'porta_peer2';
+      const orderer = '_ordem_';
+      const description = 'Descrição';
+      const walletName = 'nome_da_carteira'
+      const peersOrgs = 'peers_da_organização'
+      const countPeer = 'Total_de_peers';
+      const OrganizationsOrgs = "Orgs_da_Organização";
+      const ChannelName = "Nome_do_canal";
 
       const folderBase = 'base';    
       const folderNetworkConfig = 'networkconfig';
       const folderCrypto = 'crypto';
       const folderConfigtx = 'configtx';
-      await copiaArquivos();
+      await copyFiles();
       // Troca as informações dos arquivos da pasta base
       await changeBase(folderBase, networkName);    
       await changeDocker(folderBase, networkName);    
@@ -434,6 +450,7 @@ module.exports = {
       await changeDockerComposePeer(folderBase, orgName, peerNumber, couchdbName, portCouch, portPeer2, networkName);
       // Troca as informações dos arquivos da pasta networkconfig
       await changeCA(folderNetworkConfig, portCA, orgName);
+      await changeChannel(folderNetworkConfig, ChannelName);
       await changeIdentityPrivateSig(folderNetworkConfig, orgName, keyOrg);
       await changeOrderers(folderNetworkConfig, portOrderer, orderer);
       await changeOrg(folderNetworkConfig, networkName, orgName, description, walletName);
@@ -477,12 +494,9 @@ module.exports = {
       }
       else{
         console.log('Essa networks já existe');
+        await make()
       }
     })
 
   }
 }
-
-
-
-
